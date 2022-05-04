@@ -60,6 +60,7 @@ func GetArticles(c *gin.Context) {
 	// 比如带有参数的请求/path?id=1234&name=Manu&value=111,
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+	title := c.Query("title")
 	// 当参数默认为0的话
 	//if pageSize == 0 {
 	//	pageSize = -1
@@ -67,7 +68,7 @@ func GetArticles(c *gin.Context) {
 	if pageNum == 0 {
 		pageNum = 1
 	}
-	data, code, total := model.GetArticle(pageSize, pageNum)
+	data, code, total := model.GetArticle(title, pageSize, pageNum)
 	c.JSON(200, gin.H{
 		"status":  code,
 		"data":    data,

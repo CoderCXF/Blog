@@ -13,6 +13,15 @@ func InitRouter() {
 	r.Use(gin.Recovery()) // 不用日志系统了
 	r.Use(middleware.Logger())
 	r.Use(middleware.Cors())
+
+	// 托管静态资源
+	r.LoadHTMLGlob("static/admin/index.html")
+	r.Static("admin/static", "static/admin/static")
+	r.StaticFile("admin/favicon.icon", "static/admin/favicon.icon")
+	r.GET("admin", func(c *gin.Context) {
+		c.HTML(200, "index.html", nil)
+	})
+
 	// 路由接口
 	auth := r.Group("api/v1")
 	// 1. 需要鉴权路由
@@ -44,8 +53,12 @@ func InitRouter() {
 	// 2. 不需要鉴权路由
 	router := r.Group("api/v1")
 	{
+		//
 		router.POST("user/add", v1.AddUser)
 		router.GET("users", v1.GetUsers)
+		// 查询单个参数，用于编辑用户接口
+		router.GET("user/:id", v1.GetUserInfo)
+		router.GET("category/:id", v1.GetCateInfo)
 		router.GET("category", v1.GetCates)
 		// 查询所有的文章
 		router.GET("article", v1.GetArticles)

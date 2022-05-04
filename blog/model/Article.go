@@ -50,11 +50,25 @@ func GetArtInfo(id int) (Article, int) {
 }
 
 // 查询文章列表 返回Article类型的切片
-func GetArticle(pageSize int, pageNum int) ([]Article, int, int64) {
+func GetArticle(title string, pageSize int, pageNum int) ([]Article, int, int64) {
 	var articles []Article
 	var total int64
+	// 等于空的话，就表示全查
+	if title == "" {
+		err = db.Order("updated_at DESC").Preload("Category").Find(&articles).Limit(pageSize).Offset((pageNum - 1) * pageSize).Error
+		// 单独计数
+		db.Model(&articles).Count(&total)
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return articles, errmsg.ERROR, 0
+		}
+		return articles, errmsg.SUCCESS, total
+	}
 	// 分页
-	err = db.Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&articles).Count(&total).Error
+	// 不等于空的话，表示搜索框有数据，则进行模糊查询
+	err = db.Order("updated_at DESC").Preload("Category").Where(
+		"title LIKE ?", "%"+title+"%",
+	).Find(&articles).Limit(pageSize).Offset((pageNum - 1) * pageSize).Error
+	db.Model(&articles).Count(&total)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return articles, errmsg.ERROR, 0
 	}

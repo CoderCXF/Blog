@@ -36,13 +36,20 @@ func CreateCate(data *Category) int {
 	return errmsg.SUCCESS // 200
 }
 
+// 查询单个分类信息
+func GetCateInfo(id int) (Category, int) {
+	var cate Category
+	db.Where("id = ?", id).First(&cate)
+	return cate, errmsg.SUCCESS
+}
+
 // 查询分类列表
 // 返回Category类型的切片
 func GetCate(pageSize int, pageNum int) ([]Category, int64) {
 	var cates []Category
 	var total int64
 	// 分页
-	err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cates).Count(&total).Error
+	err = db.Find(&cates).Count(&total).Limit(pageSize).Offset((pageNum - 1) * pageSize).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, 0
 	}

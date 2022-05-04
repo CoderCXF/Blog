@@ -28,6 +28,20 @@ func CheckUser(name string) int {
 	}
 }
 
+// 修改上述方法，在api的EditUser中使用
+func CheckUpUser(id int, name string) int {
+	var user User
+	db.Select("id,username").Where("username = ?", name).First(&user)
+	if user.ID == uint(id) {
+		return errmsg.SUCCESS
+	}
+	if user.ID > 0 {
+		return errmsg.ERROR_USERNAME_USED //用户已存在
+	} else {
+		return errmsg.SUCCESS // 用户不存在，用户名可用
+	}
+}
+
 // 新增用户
 func CreateUser(data *User) int {
 	// 对用户密码加密，也可以使用钩子函数
@@ -40,14 +54,30 @@ func CreateUser(data *User) int {
 	return errmsg.SUCCESS // 200
 }
 
+// 查询单个用户(编辑)
+func GetUserInfo(id int) (User, int) {
+	var user User
+	err = db.Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return user, errmsg.ERROR_USER_NOT_EXIST
+	}
+	return user, errmsg.SUCCESS
+}
+
 // 查询用户列表
 // 返回User类型的切片
-func GetUsers(pageSize int, pageNum int) ([]User, int64) {
+func GetUsers(username string, pageSize int, pageNum int) ([]User, int64) {
+	//var user User
 	var users []User
 	var total int64
-	// 分页
-	err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Count(&total).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
+	if username == "" {
+		db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Count(&total)
+		return users, total
+	} else {
+		db.Where("username LIKE ?", username+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Count(&total)
+	}
+	//db.Model(&user).Count(&total)
+	if err == gorm.ErrRecordNotFound {
 		return nil, 0
 	}
 	return users, total

@@ -9,6 +9,7 @@ import (
 func Upload(c *gin.Context) {
 	//name, _ := c.FormFile("file")
 	file, fileHeader, err := c.Request.FormFile("File")
+	//fmt.Printf("file:%v\nfileHeader:%v\nerr;%v\n", file, fileHeader, err)
 	code := errmsg.ERROR
 	//c.Request.
 	if err != nil {

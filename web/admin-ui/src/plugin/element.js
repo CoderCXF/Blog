@@ -30,6 +30,16 @@ import {
   RadioButton,
   Upload,
   Image,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  Link,
+  Tooltip,
+  Divider,
+  Tabs,
+  TabPane,
+  Tag,
+  ColorPicker,
   MenuItemGroup} from 'element-ui'
 
 
@@ -75,3 +85,17 @@ Vue.use(RadioGroup)
 Vue.use(RadioButton)
 Vue.use(Upload)
 Vue.use(Image)
+
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
+
+Vue.use(Link)
+Vue.use(Tooltip)
+Vue.use(Divider)
+
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Tag)
+
+Vue.use(ColorPicker);

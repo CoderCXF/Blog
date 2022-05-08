@@ -15,14 +15,14 @@ func InitRouter() {
 	r.Use(middleware.Cors())
 
 	// 托管静态资源
-	r.LoadHTMLGlob("static/admin/index.html")
-	r.Static("admin/static", "static/admin/static")
-	r.StaticFile("admin/favicon.icon", "static/admin/favicon.icon")
-	r.GET("admin", func(c *gin.Context) {
-		c.HTML(200, "index.html", nil)
-	})
+	//r.LoadHTMLGlob("static/admin/index.html")
+	//r.Static("admin/static", "static/admin/static")
+	//r.StaticFile("admin/favicon.icon", "static/admin/favicon.icon")
+	//r.GET("admin", func(c *gin.Context) {
+	//	c.HTML(200, "index.html", nil)
+	//})
 
-	// 路由接口
+	// 路由
 	auth := r.Group("api/v1")
 	// 1. 需要鉴权路由
 	auth.Use(middleware.JwtToken())
@@ -49,6 +49,10 @@ func InitRouter() {
 
 		// 上传文件
 		auth.POST("upload", v1.Upload)
+
+		// 标签
+		// 1. 添加标签
+		//auth.POST("tag/add", v1.AddTag)
 	}
 	// 2. 不需要鉴权路由
 	router := r.Group("api/v1")
@@ -68,6 +72,12 @@ func InitRouter() {
 		router.GET("article/info/:id", v1.GetArtInfo)
 		// 登录
 		router.POST("login", v1.Login)
+
+		// FIXME:需要权限
+		router.POST("tag/add", v1.AddTag)
+		router.GET("tags", v1.GetAllTags)
+		router.DELETE("tag/:id", v1.DeleteTag)
+		router.PUT("tag/:id", v1.EditTag)
 	}
 
 	r.Run(utils.HttpPort)

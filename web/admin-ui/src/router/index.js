@@ -6,9 +6,11 @@ import Admin from '../views/Admin.vue'
 import Index from '../components/Index.vue'
 import ArticleAdd from '../components/Article/ArticleAdd.vue'
 import ArticleList from '../components/Article/ArticleList.vue'
+import EditArticle from '../components/Article/EditArticle.vue'
 import UserList from '../components/User/UserList.vue'
 import CateList from '../components/Category/CateList.vue'
-
+import TagList from '../components/Tag/TagList.vue'
+import MyInfo from '../components/User/MyInfo.vue'
 Vue.use(VueRouter)
 
 
@@ -28,9 +30,12 @@ const routes = [
       {path:'index', component: Index},
       {path:'artadd', component: ArticleAdd},
       {path:'artadd/:id', component: ArticleAdd, props:true},
+      {path:'startart', component: EditArticle},
       {path:'artlist', component: ArticleList},
       {path:'userlist', component: UserList},
       {path:'catelist', component: CateList},
+      {path:'taglist', component: TagList},
+      {path:'myinfo', component: MyInfo},
     ]
   },
 ]

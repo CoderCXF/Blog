@@ -7,13 +7,15 @@ import (
 
 type Article struct {
 	// Belong to（many to one）关系
+	// 一篇文章只属于某一个分类，所以是属于关系
 	Cid      int      `gorm:"type:int;not null;" json:"cid"`
 	Category Category `gorm:"foreignKey:Cid"`
 	Title    string   `gorm:"type:varchar(100);not null" json:"title"`
-	// 分类id
-	Desc    string `gorm:"type:varchar(200)" json:"desc"`
-	Content string `gorm:"type:longtext" json:"content"`
-	Img     string `gorm:"type:varchar(100)" json:"img"`
+	Desc     string   `gorm:"type:varchar(200)" json:"desc"`
+	Content  string   `gorm:"type:longtext" json:"content"`
+	Img      string   `gorm:"type:varchar(100)" json:"img"`
+	// 仍然保存的是字符串类型，多个以,分隔
+	Tid string `orm:"type:varchar(100)" json:"tid"`
 	gorm.Model
 }
 
@@ -103,3 +105,5 @@ func DeleteArticle(id int) int {
 	}
 	return errmsg.SUCCESS
 }
+
+//

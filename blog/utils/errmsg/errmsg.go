@@ -23,6 +23,10 @@ const (
 
 	// code=4000... login包错误
 	ERROR_TOKEN_GEN = 40001
+
+	// code= 5000... Tag模块错误
+	ERROR_TAG_NOT_EXIST = 50001
+	ERROR_TAG_EXIST     = 50002
 )
 
 var codeMsg = map[int]string{
@@ -42,6 +46,9 @@ var codeMsg = map[int]string{
 
 	ERROR_ART_NOT_EXIST: "文章不存在",
 	ERROR_TOKEN_GEN:     "token生成错误",
+
+	ERROR_TAG_NOT_EXIST: "标签不存在",
+	ERROR_TAG_EXIST:     "标签已经存在",
 }
 
 func GetErrMsg(code int) string {

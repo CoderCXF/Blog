@@ -55,7 +55,7 @@
         </el-form-item>
         <el-form-item label="文章内容" prop="content">
           <br>
-          <Editor v-model="artInfo.content" placeholder="请编辑文章内容"></Editor>
+          <mavon-editor v-model="artInfo.content" :ishljs="true" ref=md @imgAdd="$imgAdd" @imgDel="$imgDel" />
         </el-form-item>
         <el-form-item class="loginBtn">
           <el-button type="primary" @click="submitArt(artInfo.id)">{{artInfo.id?'更新':'提交'}}</el-button>
@@ -101,7 +101,8 @@ export default {
         desc: [{min:0, max: 150, message: '最多用150个字描述', trigger: 'blur' }],
         content:[{ required: true, message: '请输入文章内容', trigger: 'blur' }],
         img:[{ required: true, message: '为了优美，请上传一张缩略图', trigger: 'blur'}]
-      }
+      },
+      img_file:{},
     }
   },
   created(){
@@ -191,6 +192,25 @@ export default {
     cancelSubmit(){
       this.$refs.artInfoRef.resetFields()
     },
+    $imgAdd(pos, $file){
+      var formdata = new FormData();
+      formdata.append('File', $file);
+      this.img_file[pos] = $file;
+      this.$http({
+        url: '/upload',
+        method: 'post',
+        data: formdata,
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }).then((res) => {
+        console.log(res)
+        let _res = res.data;
+        // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+        this.$refs.md.$img2Url(pos, _res.url);
+      })
+    },
+    $imgDel(pos, $file){
+      // console.log(pos, $file)
+    }
   }
 }
 </script>

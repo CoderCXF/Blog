@@ -12,3 +12,11 @@ html,body,#app{
 .el-table{
   margin-top: 10px;
 }
+
+.el-card{
+  border-radius: 0;
+}
+
+.el-button{
+  border-radius: 0;
+}

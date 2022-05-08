@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-card>
+    <el-card class="box-card">
       <!-- el-row表明这是一行，包含在其中的内容都写在一行中。
             Element UI 规定24rows && 24cols   
        -->
@@ -35,10 +35,10 @@
           width="180px"
           align="center">
           <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <!-- 这里将角色ID转换为文字 -->
-          <span style="margin-left: 10px">{{ scope.row.role == 1?'管理员': scope.row.role == 2? '订阅用户':'无效用户' }}</span>
-      </template>
+            <i class="el-icon-time"></i>
+            <!-- 这里将角色ID转换为文字 -->
+            <span style="margin-left: 10px">{{ scope.row.role == 1?'管理员': scope.row.role == 2? '订阅用户':'无效用户' }}</span>
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -105,8 +105,8 @@
       </div>
     </el-dialog>
 
-    <!-- 编辑用户区域 开始-->
-        <el-dialog title="编辑用户" :visible="dialogEditFormVisible" show-close @close="onCloseEdit">
+    <!-- 编辑用户dialog 开始-->
+    <el-dialog title="编辑用户" :visible="dialogEditFormVisible" show-close @close="onCloseEdit">
       <el-form :model="userInfo" ref="editUserFormRef" :rules="editUserFormRules">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="userInfo.username" :placeholder="userInfo.username"></el-input>
@@ -120,6 +120,7 @@
           </el-select>
         </el-form-item>
       </el-form>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelEditUser">取 消</el-button>
         <el-button type="primary" @click="confirmEditUser">确 定</el-button>
@@ -137,7 +138,7 @@ export default {
       username:'',
       currentPage: 1, // 当前页码
       total: 10, // 总条数
-      pageSize: 10, // 每页的数据条数
+      pageSize: 20, // 每页的数据条数
 
       // 新增用户dialog 数据
       dialogFormVisible: false,
@@ -191,7 +192,7 @@ export default {
           { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
         ],
         checkpass: [
-           //简单校验密码
+           // 自定义校验规则
            { validator: (rule, value, callback)=>{
               if (value === '') {
                 callback(new Error('请再次输入密码'));
@@ -279,7 +280,7 @@ export default {
       this.userInfo.role = role
       this.role = role.toString()
     },
-    // 编辑用户d:ialog关闭
+    // 编辑用户:dialog关闭
     onCloseEdit() {
       this.dialogEditFormVisible = false
       this.$refs.editUserFormRef.resetFields()
@@ -306,7 +307,7 @@ export default {
       })
     },
     // 删除用户
-    async handleDelete(index, id){
+    async handleDelete(index, id) {
       // TODO:
       const confirmRes = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -334,3 +335,16 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.container, .el-card{
+  height: 100%;
+}
+
+.el-pagination {
+  position: absolute;
+  left: 50%;
+  bottom: 5%;
+  transform: translate(-30%,0);
+}
+</style>

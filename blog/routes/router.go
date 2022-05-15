@@ -10,7 +10,7 @@ import (
 func InitRouter() {
 	gin.SetMode(utils.AppMode)
 	r := gin.New()
-	r.Use(gin.Recovery()) // 不用日志系统了
+	r.Use(gin.Recovery()) // 不用日志中间件
 	r.Use(middleware.Logger())
 	r.Use(middleware.Cors())
 

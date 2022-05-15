@@ -1,9 +1,0 @@
-time="2022-05-01 11:50:58" level=info Agent=PostmanRuntime/7.26.8 DataSize=193 HostName=LAPTOP-KKPGPU2Q Ip="::1" Method=POST SpendTime="104 ms" Status=200 path=/api/v1/login
-time="2022-05-01 11:51:43" level=info Agent=PostmanRuntime/7.26.8 DataSize=193 HostName=LAPTOP-KKPGPU2Q Ip="::1" Method=POST SpendTime="108 ms" Status=200 path=/api/v1/login
-time="2022-05-01 11:51:51" level=info Agent=PostmanRuntime/7.26.8 DataSize=193 HostName=LAPTOP-KKPGPU2Q Ip="::1" Method=POST SpendTime="53 ms" Status=200 path=/api/v1/login
-time="2022-05-01 11:51:52" level=info Agent=PostmanRuntime/7.26.8 DataSize=193 HostName=LAPTOP-KKPGPU2Q Ip="::1" Method=POST SpendTime="65 ms" Status=200 path=/api/v1/login
-time="2022-05-01 11:53:17" level=info Agent=PostmanRuntime/7.26.8 DataSize=193 HostName=LAPTOP-KKPGPU2Q Ip="::1" Method=POST SpendTime="117 ms" Status=200 path=/api/v1/login
-time="2022-05-01 14:35:41" level=info Agent=PostmanRuntime/7.26.8 DataSize=29 HostName=LAPTOP-KKPGPU2Q Ip="::1" Method=POST SpendTime="580 ms" Status=200 path=/api/v1/user/add
-time="2022-05-01 15:06:19" level=info Agent=PostmanRuntime/7.26.8 DataSize=735 HostName=LAPTOP-KKPGPU2Q Ip="::1" Method=GET SpendTime="80 ms" Status=200 path=/api/v1/users
-time="2022-05-01 15:16:04" level=info Agent=PostmanRuntime/7.26.8 DataSize=46 HostName=LAPTOP-KKPGPU2Q Ip="::1" Method=POST SpendTime="2 ms" Status=200 path=/api/v1/user/add
-time="2022-05-01 15:16:14" level=info Agent=PostmanRuntime/7.26.8 DataSize=29 HostName=LAPTOP-KKPGPU2Q Ip="::1" Method=POST SpendTime="182 ms" Status=200 path=/api/v1/user/add

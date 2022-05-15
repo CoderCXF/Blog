@@ -15,44 +15,49 @@
       <!-- 这里使用了自定义列表，并且使用scope可以获取表中数据-->
       <el-table :data="CateList.slice((currentPage-1)*pageSize,currentPage*pageSize)">
         <el-table-column
-          prop="id"
+          type="index"
           label="ID"
-          width="180px"
+          min-width="20%"
           align="center">
         </el-table-column>
         <el-table-column
           prop="name"
-          label="用户名"
-          width="180px"
-          align="center">
+          label="分类名"
+          align="center"
+          min-width="30%">
         </el-table-column>
         <el-table-column
           label="操作"
-          width="270px"
-          align="center">
+          align="center"
+          min-width="50%">
             <template slot-scope="scope">
               <el-button
-                size="mini"
+                size="small"
                 icon="el-icon-edit"
+                type="text"
+                class="rowActionBtn"
                 @click="handleEdit(scope.$index, scope.row.id, scope.row.name, scope.row.role)">编辑
               </el-button>
+              <span style="color:#e8e8e8; padding: 0 10px;"> | </span>
               <el-button
-                size="mini"
-                type="danger"
+                size="small"
+                type="text"
                 icon="el-icon-delete"
+                class="rowActionBtn"
                 @click="handleDelete(scope.$index, scope.row.id)">删除
               </el-button>
             </template>
         </el-table-column>
       </el-table>
       <!-- 分页操作 -->
-      <el-pagination align='center' 
+      <el-pagination align='right' 
+        background
         @size-change="handleSizeChange" 
         @current-change="handleCurrentChange"
         :current-page="currentPage" 
-        :page-sizes="[1,5,10,20]" 
+        :page-sizes="[5,10,20]" 
         :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper" 
+        layout="prev, pager, next,sizes" 
         :total="CateList.length">
       </el-pagination>
     </el-card>
@@ -101,6 +106,7 @@ export default {
       dialogFormVisible: false,
       newCateInfo: {
         name: '',
+        role:''
       },
       role: '1',
       addCateFormRules: {
@@ -217,7 +223,7 @@ export default {
     // 删除分类
     async handleDelete(index, id){
       // TODO:
-      const confirmRes = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      const confirmRes = await this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -241,6 +247,11 @@ export default {
 
 <style scoped>
 .container,.el-card{
-  height: 100%;
+  /* 这里不需要100%设置 */
+  /* height: 100%; */
+}
+
+.rowActionBtn{
+  color:red
 }
 </style>

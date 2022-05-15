@@ -31,11 +31,16 @@
           <i class="el-icon-document"></i>
           <span slot="title">写文章</span>
         </el-menu-item>
+        <el-menu-item index="drafts">
+          <i class="el-icon-document"></i>
+          <span slot="title">草稿箱</span>
+        </el-menu-item>
         <el-menu-item index="artlist">
           <i class="el-icon-document"></i>
           <span slot="title">文章列表</span>
         </el-menu-item>
-        <el-menu-item index="catelist">
+      </el-submenu>
+      <el-menu-item index="catelist">
           <i class="el-icon-document"></i>
           <span slot="title">分类列表</span>
         </el-menu-item>
@@ -43,7 +48,6 @@
           <i class="el-icon-document"></i>
           <span slot="title">标签管理</span>
         </el-menu-item>
-      </el-submenu>
       <!-- 用户中心 -->
       <el-menu-item index="userlist">
         <i class="el-icon-s-check"></i>
@@ -63,7 +67,7 @@
 export default {
   methods:{
     goToPage(index){
-      // 选中事件
+      // 选中事件，进行路由
       this.$router.push('/'+index).catch(err=>err)
     }
   }

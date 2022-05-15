@@ -17,36 +17,54 @@
       </el-row>
       <!-- table表格 -->
       <!-- 这里使用了自定义列表，并且使用scope可以获取表中数据-->
-      <el-table :data="ArticleList.slice((currentPage-1)*pageSize,currentPage*pageSize)">
-        <el-table-column
-          prop="ID"
-          label="ID"
-          width="50px"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          prop="cid"
-          label="分类"
-          width="50px"
-          align="center">
-        </el-table-column>
+      <el-table 
+      :data="ArticleList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :cell-style="CellStyle"
+      >
         <el-table-column
           prop="title"
           label="文章标题"
-          width="250px"
-          align="center">
+          min-width="20%"
+          align="left">
         </el-table-column>
+        <el-table-column
+          label="分类"
+          min-width="20%"
+          align="left">
+          <template slot-scope="scope">
+            <el-tag type="success" color="#fff2e8" size="small" style="color: #fa541c;">{{formatCid(scope.row)}}</el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="标签"
+          min-width="20%"
+          align="left">
+          <template slot-scope="scope">
+            <!-- TODO: -->
+            <el-tag type="success" 
+              color="rgb(207, 211, 215)" 
+              size="small" 
+              style="color: #484a4b;"
+              v-for="(value, name) in formatTag(scope.row)"
+              :key="name"
+              >
+              {{value}}
+            </el-tag>
+          </template>
+        </el-table-column>
+          
         <el-table-column
           prop="desc"
           label="文章描述"
-          width="250px"
-          align="center">
+          min-width="20%"
+          align="left">
         </el-table-column>
         <el-table-column
           prop="img"
           label="缩略图"
-          width="200px"
-          align="center">
+          min-width="20%"
+          align="left">
           <template slot-scope="scope">
             <!-- 这里插入图片需要用到slot机制，为src绑定参数 -->
             <img v-bind:src="scope.row.img" style="width:70px;height:70px;" alt="暂无图片">
@@ -54,17 +72,21 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          width="180px"
-          align="center">
+          min-width="30%"
+          align="left">
             <template slot-scope="scope">
               <el-button
+                class="rowActionBtn"
+                type="text"
                 size="mini"
                 icon="el-icon-edit"
                 @click="handleEdit(scope.$index, scope.row.ID, scope.row.Articlename, scope.row.role)">编辑
               </el-button>
+              <span style="color:#e8e8e8; padding: 0 10px">|</span>
               <el-button
+                class="rowActionBtn"
+                type="text"
                 size="mini"
-                type="danger"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.$index, scope.row.ID)">删除
               </el-button>
@@ -72,13 +94,14 @@
         </el-table-column>
       </el-table>
       <!-- 分页操作 -->
-      <el-pagination align='center' 
+      <el-pagination align='right' 
+        background
         @size-change="handleSizeChange" 
         @current-change="handleCurrentChange"
         :current-page="currentPage" 
-        :page-sizes="[1,5,10,20]" 
+        :page-sizes="[5,10,20]" 
         :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper" 
+        layout="prev, pager, next, sizes" 
         :total="ArticleList.length">
       </el-pagination>
     </el-card>
@@ -91,16 +114,23 @@ export default {
   data(){
     return {
       ArticleList:[],
+      cateList: [],
+      tagList:[],
       title:'', // 搜索框内容
       img:'',  // 缩略图
       currentPage: 1, // 当前页码
       total: 10, // 总条数
       pageSize: 10, // 每页的数据条数
+      cateName:'',
+      tid: '',
+      tagName:{}, // 当前文章的所有标签
     }
   },
   // 声明周期函数
   created(){
     this.getArticleList()
+    this.getAllCates()
+    this.getTagList()
   },
   methods:{
     async getArticleList(){
@@ -114,9 +144,31 @@ export default {
       if (res.status != 200){
         return this.$message.error(res.message)
       }
-      console.log(res)
       this.ArticleList = res.data
       this.total = res.total
+    },
+    // 获取分类列表
+    async getAllCates(){
+      const {data:res} = await this.$http.get('category', { 
+        params:{
+           pagesize:this.pageSize,
+           pagenum:this.currentPage 
+           } 
+        })
+        // console.log(res)
+        // console.log(res.status)
+        if (res.status != 200){
+          return this.$message.error(res.message)
+        }
+        this.cateList = res.data
+    },
+    // 获取标签列表
+    async getTagList(){
+      const {data:res} = await this.$http.get('tags')
+      if(res.status !== 200){
+        return this.$$message.error('获取标签列表失败')
+      }
+      this.tagList = res.data
     },
     //每页条数改变时触发 选择一页显示多少行
     handleSizeChange(val) {
@@ -142,7 +194,7 @@ export default {
     // 删除文章
     async handleDelete(index, id) {
       // TODO:
-      const confirmRes = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      const confirmRes = await this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -159,13 +211,53 @@ export default {
         //刷新用户列表
         this.getArticleList()
       }
-    },    
+    },
+    // 获取某一行文章的cid =>根据cid获取cid内容 
+    formatCid(row, column){
+      let cid = row.cid
+      for(let i = 0; i < this.cateList.length; i++) {
+        if(cid == this.cateList[i].id){
+          this.cateName =  this.cateList[i].name
+          return this.cateName
+        }
+      }
+    },
+    // 获取某一行文章的tid =>根据tagid获取tag字符串内容
+    formatTag(row) {
+      let id = row.ID
+      let tid = row.tid
+      let tidArr = tid.split(",")
+      let temp = []
+      // console.log(tidArr)
+      for(let j = 0; j < tidArr.length; j++) {
+        let ttid = parseInt(tidArr[j])  // 1
+        for(let i = 0; i < this.tagList.length; i++) {
+          if(ttid === this.tagList[i].ID){
+            temp.push(this.tagList[i].name)
+          }
+        }
+      }
+      // this.tagName[id] = temp
+      return temp.length > 5 ? temp.slice(0, 3):temp
+      // console.log(this.tagName)
+    },
+    CellStyle(row,column,rowIndex,columnIndex) {
+      if(row.columnIndex === 1){
+        return 'color:red'
+      }
+    },   
   }
 }
 </script>
 
 <style scoped>
 .container,.el-card{
-  height: 100%;
+  /* height: 100%; */
 }
+
+.rowActionBtn{
+  color:red
+}
+
+
 </style>

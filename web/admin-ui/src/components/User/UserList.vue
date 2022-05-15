@@ -17,23 +17,24 @@
       </el-row>
       <!-- table表格 -->
       <!-- 这里使用了自定义列表，并且使用scope可以获取表中数据-->
-      <el-table :data="userList.slice((currentPage-1)*pageSize,currentPage*pageSize)">
+      <!-- slice(0, 10) -->
+      <el-table :data="userList.slice((currentPage-1)*pageSize,currentPage*pageSize)" fit>
         <el-table-column
-          prop="ID"
+          type="index"
           label="ID"
-          width="180px"
-          align="center">
+          align="center"
+          min-width="10%">
         </el-table-column>
         <el-table-column
           prop="username"
           label="用户名"
-          width="180px"
-          align="center">
+          align="center"
+          min-width="20%">
         </el-table-column>
         <el-table-column
           label="角色"
-          width="180px"
-          align="center">
+          align="center"
+          min-width="20%">
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
             <!-- 这里将角色ID转换为文字 -->
@@ -42,12 +43,13 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          width="270px"
-          align="center">
+          align="center"
+          min-width="50%">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 icon="el-icon-edit"
+                style="background-color:orange;color: #fff;"
                 @click="handleEdit(scope.$index, scope.row.ID, scope.row.username, scope.row.role)">编辑
               </el-button>
               <el-button
@@ -60,21 +62,24 @@
                 size="mini"
                 type="info"
                 icon="el-icon-warning-outline"
-                @click="onResetPwd">重置
+                @click="onResetPwd">重置密码
               </el-button>
       </template>
         </el-table-column>
       </el-table>
       <!-- 分页操作 -->
-      <el-pagination align='center' 
+      <el-pagination 
+        background
+        align='right' 
         @size-change="handleSizeChange" 
         @current-change="handleCurrentChange"
         :current-page="currentPage" 
-        :page-sizes="[1,5,10,20]" 
+        :page-sizes="[5,10,20]" 
         :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper" 
+        layout="prev, pager, next,sizes" 
         :total="userList.length">
       </el-pagination>
+
     </el-card>
 
     <!-- 新增用户区域 dialog-->
@@ -137,8 +142,8 @@ export default {
       userList:[],
       username:'',
       currentPage: 1, // 当前页码
-      total: 10, // 总条数
-      pageSize: 20, // 每页的数据条数
+      total: 1, // 总条数
+      pageSize: 10, // 每页的数据条数
 
       // 新增用户dialog 数据
       dialogFormVisible: false,
@@ -212,7 +217,7 @@ export default {
     this.getUserList()
   },
   methods:{
-    async getUserList(){
+    async getUserList() {
       const {data:res} = await this.$http.get('users', { 
         params:{
            username: this.username,
@@ -220,8 +225,6 @@ export default {
            pagenum:this.currentPage 
            } 
         })
-      // console.log(this.username)
-      // console.log(res.status)
       if (res.status != 200){
         return this.$message.error(res.message)
       }
@@ -240,24 +243,24 @@ export default {
         this.currentPage = val; // 回调参数：当前页
     },
     // 新增用户:
-    addUserClick(){
+    addUserClick() {
       this.dialogFormVisible = true
     },
-    onClose(){
+    onClose() {
       this.dialogFormVisible = false
       this.$refs.addUserFormRef.resetFields()
     },
     // 新增用户:dialog取消
-    cancelAddUser(){
+    cancelAddUser() {
       this.dialogFormVisible = false
       // 要使得resetFields生效，还必须定义rules-prop
       this.$refs.addUserFormRef.resetFields()
     },
     // 新增用户:dialog确认提交按钮
-    confirmAddUser(){
+    confirmAddUser() {
       this.newUserInfo.role = parseInt(this.role)
       this.$refs.addUserFormRef.validate(async (valid)=>{
-        if(!valid){
+        if(!valid) {
           return this.$message.error('参数格式不确定')
         }
         const {data:res} = await this.$http.post('user/add',{
@@ -273,7 +276,7 @@ export default {
     },
 
     // 编辑用户:按钮事件
-    handleEdit(index, id,username, role){
+    handleEdit(index, id, username, role) {
       this.dialogEditFormVisible = true
       this.toEditID = id
       this.userInfo.username = username
@@ -300,7 +303,7 @@ export default {
           username: this.userInfo.username,
           role: this.userInfo.role
         })
-        if(res.status != 200) return this.$message.error(err.msg)
+        if(res.status != 200) return this.$message.error(res.msg)
         this.$message.success('用户修改成功')
         this.dialogEditFormVisible = false
         this.getUserList()
@@ -337,14 +340,8 @@ export default {
 </script>
 
 <style scoped>
-.container, .el-card{
-  height: 100%;
+.container, .el-card, .el-table{
+  width: 100%;
 }
 
-.el-pagination {
-  position: absolute;
-  left: 50%;
-  bottom: 5%;
-  transform: translate(-30%,0);
-}
 </style>

@@ -7,6 +7,7 @@ import Index from '../components/Index.vue'
 import ArticleAdd from '../components/Article/ArticleAdd.vue'
 import ArticleList from '../components/Article/ArticleList.vue'
 import EditArticle from '../components/Article/EditArticle.vue'
+import Drafts from '../components/Article/Drafts.vue'
 import UserList from '../components/User/UserList.vue'
 import CateList from '../components/Category/CateList.vue'
 import TagList from '../components/Tag/TagList.vue'
@@ -31,6 +32,7 @@ const routes = [
       {path:'artadd', component: ArticleAdd},
       {path:'artadd/:id', component: ArticleAdd, props:true},
       {path:'startart', component: EditArticle},
+      {path:'drafts', component: Drafts},
       {path:'artlist', component: ArticleList},
       {path:'userlist', component: UserList},
       {path:'catelist', component: CateList},

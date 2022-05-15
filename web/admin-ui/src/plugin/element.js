@@ -40,6 +40,7 @@ import {
   TabPane,
   Tag,
   ColorPicker,
+  Autocomplete,
   MenuItemGroup} from 'element-ui'
 
 
@@ -98,4 +99,6 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Tag)
 
-Vue.use(ColorPicker);
+Vue.use(ColorPicker)
+
+Vue.use(Autocomplete)
